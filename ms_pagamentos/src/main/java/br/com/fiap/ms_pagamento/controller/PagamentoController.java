@@ -44,6 +44,7 @@ public class PagamentoController {
         return ResponseEntity.created(uri).body(dto);
     }
 
+
     @PutMapping("/{id}")
     public ResponseEntity<PagamentoDTO> update(@PathVariable @NotNull Long id,
                                                @RequestBody @Valid PagamentoDTO dto ){
@@ -56,6 +57,13 @@ public class PagamentoController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    // Método para chamar confirmarPagamento
+    @PatchMapping("{id}/confirmar")
+    public void confirmarPagamentoDePedido(@PathVariable @NotNull Long id) {
+        service.confirmarPagamentoDePedido(id);
+    }
+
 
     //    @GetMapping
 //    public ResponseEntity<Page<PagamentoDTO>> findAll(

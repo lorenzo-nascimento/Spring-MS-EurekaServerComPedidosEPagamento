@@ -1,6 +1,7 @@
 package br.com.fiap.ms_pedidos.controller;
 
 import br.com.fiap.ms_pedidos.dto.PedidoDTO;
+import br.com.fiap.ms_pedidos.dto.StatusDTO;
 import br.com.fiap.ms_pedidos.service.PedidoService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -20,15 +21,11 @@ public class PedidoController {
     @Autowired
     private PedidoService service;
 
-    // testando a distribuição de carga
-    // devolve a porta da instância que está rodando
     @GetMapping("/port")
-    public ResponseEntity<String> getPort(@Value("${local.server.port}") String port){
+    public ResponseEntity<String> getPort(@Value("${local.server.port}") String port) {
         String msg = String.format("Requisição da Instância recebida na porta: %s", port);
         return ResponseEntity.ok(msg);
     }
-
-    // ... código omitido ...
 
     @GetMapping
     public ResponseEntity<List<PedidoDTO>> findAll(){
@@ -52,5 +49,16 @@ public class PedidoController {
                 .toUri();
 
         return ResponseEntity.created(uri).body(dto);
+    }
+    @PutMapping("/{id}/pago")
+    public ResponseEntity<Void> aprovarPagamentoDoPedido(@PathVariable @NotNull Long id) {
+        service.aprovarPagamentoDoPedido(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<PedidoDTO> updatePedidoStatus(@PathVariable Long id, @RequestBody StatusDTO statusDTO) {
+        PedidoDTO dto = service.updatePedidoStatus(id, statusDTO);
+        return ResponseEntity.ok(dto);
     }
 }
